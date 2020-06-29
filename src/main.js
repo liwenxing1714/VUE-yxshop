@@ -10,6 +10,29 @@ import store  from "@/store/index";
 import axios from "@/utils/request";//引入axios封装的拦截器对象
 Vue.prototype.$axios = axios;//this.$axios
 
+
+//引入vant
+import Vant from "vant"
+import 'vant/lib/index.css';
+import { Field } from 'vant';
+import { Button } from 'vant';
+import { Form } from 'vant';
+Vue.use(Field);
+Vue.use(Button);
+Vue.use(Form);
+import { Popup } from 'vant';
+Vue.use(Popup);
+import { Picker } from 'vant';
+Vue.use(Picker);
+import { Image as VanImage } from 'vant';
+Vue.use(VanImage);
+import { Area } from 'vant';
+Vue.use(Area);
+
+
+
+
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
