@@ -158,7 +158,7 @@ export default {
         this.countSeconds();//调用倒计时的方法
       })
     }
-  
+     
     }
 };
 </script>
