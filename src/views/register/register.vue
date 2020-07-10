@@ -94,7 +94,7 @@ export default {
                 this.$toast.fail('请输入完整')
                 return false
             }
-            //校验手机号的格式是否合法
+            校验手机号的格式是否合法
       var reg = /^1[345678]\d{9}$/;
       if(!reg.test(this.phone)){
         this.$toast.fail("请输入正确的手机号");
@@ -141,21 +141,17 @@ export default {
     },
     //发送验证码接口
     sendCode(){
-      this.$axios({
-        url:"https://api.it120.cc/small4/verification/sms/get",
-        params:{
-          mobile: this.phone,
-          key: this.key,
-          picCode: this.keyCode,
-        }
-      }).then(res=>{
-        console.log(res);
+      
+      this.$axios({url:"https://api.it120.cc/small4/verification/sms/get",params:{mobile: this.phone,key: this.key,picCode: this.keyCode,}}).then(res=>{
+      console.log(res);
+      //  console.log('定时器')
+        this.countSeconds();//调用倒计时的方法
         //校验失败的时候
         if(res.code !=0){
-          this.$toast.fail(res.msg);
+          this.$toast.fail(11111);
           return false;
         }
-        this.countSeconds();//调用倒计时的方法
+        
       })
     }
      
