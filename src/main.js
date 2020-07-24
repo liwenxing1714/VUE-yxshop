@@ -32,7 +32,25 @@ Vue.use(vant);
 // import { Area } from 'vant';
 // Vue.use(Area);
 
+// landing显示影藏
+// 请求拦截器
+axios.interceptors.request.use((config)=>{
+  store.state.isLoading=true
+  // console.log(config)
+  return config
+})
+// 相应拦截器
+axios.interceptors.response.use((response)=>{
+  // console.log(response.status)
+  if(response.status==200){
+    store.state.isLoading=false
+    return response
+  }
 
+  
+
+
+})
 
 
 

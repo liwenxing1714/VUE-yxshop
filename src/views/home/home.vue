@@ -1,66 +1,25 @@
 <template>
     <div class='home'>
-        <div class='banner'>
-             <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-                <van-swipe-item v-for="(image, index) in list" :key="index">
-                    <img :src="image.picUrl" alt="">
-                </van-swipe-item>
-             </van-swipe>
+        
+ <van-overlay :show="show" >
+      <div class="wrapper" >
+          
+        <div class="block">
+            <van-loading size="24px">加载中...</van-loading>
         </div>
-       <ul class='select'>
-           <li>
-               <van-icon name="like" />
-               <p>签到</p>
-           </li>
-            <li>
-               <van-icon name="wap-home" />
-               <p>礼券</p>
-           </li>
-            <li>
-               <van-icon name="diamond" />
-               <p>砍价</p>
-           </li>
-            <li>
-               <van-icon name="volume" />
-               <p>签到</p>
-           </li>
-       </ul>
-    <div class='select-bottom'> </div>
-        <div class='select-kj'>
-            <p>全名砍价></p>
-            <ul>
-                <li v-for="(image, index) in kanjia" :key="index">
-                   <img :src="image.pic" alt="">
-                   <div>
-                       <p>{{ image.characteristic}}</p>
-                       <p>底部</p>
-                   </div>
-                </li>
-            </ul>
-        </div>
-        <div class='pick'>
-            <div class='topbgc'></div>
-            <p>精选专题</p>
-            <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-                <van-swipe-item v-for="(image, index) in pick" :key="index">
-                    <div>
-                         <img :src="image.pic" alt="">
-                         <p>{{ image.title }}</p>
-                         <p>{{ image.descript }}</p>
-                    </div>
-                   
-                </van-swipe-item>
-             </van-swipe>
-        </div>
+      </div>
+    </van-overlay>
 
 
+        <router-view></router-view>
+            <van-tabbar v-model="active">
+                <van-tabbar-item name="home" icon="home-o" to="/home/home2" >首页</van-tabbar-item>
+                <van-tabbar-item name="search" icon="search" to="/home/all2" >分类</van-tabbar-item>
+                <van-tabbar-item name="friends" icon="friends-o" to="/shop" >标签</van-tabbar-item>
+                <van-tabbar-item name="setting" icon="setting-o" to="/home/user" >标签</van-tabbar-item>
+            </van-tabbar>
 
-        <!-- <van-tabbar >
-            <van-tabbar-item icon="home-o">标签</van-tabbar-item>
-            <van-tabbar-item icon="search">标签</van-tabbar-item>
-            <van-tabbar-item icon="friends-o">标签</van-tabbar-item>
-            <van-tabbar-item icon="setting-o">标签</van-tabbar-item>
-        </van-tabbar> -->
+
     </div>
 </template>
 
@@ -69,19 +28,36 @@ import '@/assets/style/reset.css';
 export default {
     data() {
         return {
+            active:'',
             list:[],
             kanjia:[],
-            pick:[]
+            pick:[],
+            shoplist:[],
+            show:true
         };
     },
     created() {
-
+        // console.log(this.$store.state.isLoading)
     },
     mounted() {
+        setTimeout(()=>{
+        this.show=this.$store.state.isLoading
+        // console.log(this.$store.state.isLoading)
+        },2000),
             this.$axios.get('https://api.it120.cc/small4/banner/list').then((res)=>{
             this.list = res.data.data
-            // console.log(this.list,this.list[0].picUrl )
+            // console.log(this.list)
         })
+        let tokenn = localStorage.getItem('user');
+        let a=JSON.parse(tokenn)
+    // 砍价接口
+        // this.$axios.get('https://api.it120.cc/small4/shop/goods/kanjia/join',{params:{
+        //     token:a.token,
+        //     kjid:'5346:17870'
+        // }}).then((res)=>{
+        //     console.log(res.data)
+        // })
+    
 
          this.$axios.get('https://api.it120.cc/small4/shop/goods/kanjia/list').then((res)=>{
            let kanjia = Object.keys(res.data.data.goodsMap).splice(-3)
@@ -90,24 +66,54 @@ export default {
               tem.push(res.data.data.goodsMap[item])
           })
             this.kanjia=tem
-        //    console.log(this.kanjia)
         })
 
  this.$axios.get('https://api.it120.cc/small4/cms/news/list').then((res)=>{
             this.pick = res.data.data
             // console.log(this.pick)
         })
+
+        this.$axios.get('https://api.it120.cc/small4/shop/goods/list').then((res)=>{
+            let arr = res.data.data
+           function sortNumber(a,b){//升序
+            return a.minPrice - b.minPrice
+            }
+        
+            arr.sort(sortNumber);
+            
+            this.shoplist = arr
+            
+        })
     },
     methods: {
-
+       
     }
 };
 </script>
 
 <style lang='scss' scoped>
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .block {
+    width: 120px;
+    height: 120px;
+    background-color: rgb(83, 74, 74);
+  }
+body{
+    width: 100%;
+    background-color: rgb(116, 255, 2);
+}
+.home{
+    width: 100%;
+}
 .banner{
     .my-swipe .van-swipe-item {
-        width: 3.78rem;
+        width: 100%;
         height: 3.78rem;
         // background-color: rgb(221, 103, 103);
         text-align: center;
@@ -119,7 +125,7 @@ export default {
 }
    
 .select{
-    width: 100%;
+     width: 100%;
     height: 1rem;
     background-color: rgb(255, 255, 255);
     border-radius:.15rem .15rem 0 0;
@@ -139,7 +145,7 @@ export default {
 .select-kj{
     position:relative;
     bottom:1rem;
-    width: 100%;
+     width: 100%;
     >ul{
         // display: flex;
         >li{
@@ -174,7 +180,6 @@ export default {
     }
     width: 100%;
     height: 2rem;
-    
     position:relative;
     bottom:1rem;
     .my-swipe .van-swipe-item {
@@ -193,6 +198,25 @@ export default {
             }
         }
     
+    }
+}
+.shoplist{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-top:1rem;
+    justify-content: space-around;
+    >.option{
+        width: 46%;
+        height: 2rem;
+        border: .01rem solid #ddd;
+        >img{
+            width: 100%;
+            height: 1.5rem;
+        }
+        >p{
+            font-size:.18rem;
+        }
     }
 }
 </style>

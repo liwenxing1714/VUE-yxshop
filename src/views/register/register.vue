@@ -23,7 +23,7 @@
                       />
                 <van-field v-model="users" label="" class='account' right-icon="contact" placeholder="用户名" />
                 <!-- 地区选择 -->
-             <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">
+             <van-popup v-model="show" position="top" :style="{ height: '30%' }">
                  <van-area title="标题" :area-list="columns" value="310000" @confirm='addsite' />
             </van-popup>
 
@@ -42,6 +42,7 @@
                 </van-field>
                 <van-button class='btn' @click='changFun' round type="info">圆形按钮</van-button>
         </van-form>
+        <button @click='onclick'>22222222</button>
     </div>
 </template>
 
@@ -85,6 +86,9 @@ export default {
         this.createImgCode()
     },
     methods: {
+        onclick(){
+            console.log(this.site)
+        },
         onSubmit(){
 
         },
@@ -94,7 +98,7 @@ export default {
                 this.$toast.fail('请输入完整')
                 return false
             }
-            校验手机号的格式是否合法
+            // 校验手机号的格式是否合法
       var reg = /^1[345678]\d{9}$/;
       if(!reg.test(this.phone)){
         this.$toast.fail("请输入正确的手机号");
